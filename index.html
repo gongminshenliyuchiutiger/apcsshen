@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神拿滿級分！APCS觀念題重點複習講義</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Google Fonts for better Chinese typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .tab-button.active {
+            color: #1d4ed8; /* blue-700 */
+            background-color: #dbeafe; /* blue-100 */
+            border-bottom: 2px solid #2563eb; /* blue-600 */
+        }
+        
+        .analysis-popup {
+            display: none; position: fixed; flex-direction: column;
+            resize: none; overflow: hidden; z-index: 1000;
+        }
+        .analysis-popup.active { display: flex; }
+        .analysis-header { cursor: move; }
+        .resizer {
+            position: absolute; right: 0; bottom: 0; width: 20px; height: 20px; cursor: se-resize;
+            background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16 0V16H0L16 0Z' fill='%23a0aec0'/%3E%3C/svg%3E%0A");
+            background-repeat: no-repeat; background-position: bottom right;
+        }
+
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+        details > summary::before {
+            content: '\f0da'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
+            margin-right: 0.5rem; transition: transform 0.2s; display: inline-block;
+        }
+        details[open] > summary::before { transform: rotate(90deg); }
+
+        pre { white-space: pre-wrap; word-wrap: break-word; }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="bg-gradient-to-r from-blue-700 to-indigo-900 text-white py-10 px-4 shadow-lg">
+        <div class="container mx-auto max-w-7xl text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-3">神拿滿級分！APCS觀念題重點複習講義</h1>
+            <p class="text-lg md:text-xl opacity-90">成為APCS神不再只是夢想！</p>
+        </div>
+    </header>
+
+    <nav class="sticky top-0 bg-white/90 backdrop-blur-md shadow-md z-50">
+        <div class="container mx-auto max-w-7xl px-4">
+            <div id="main-nav" class="flex overflow-x-auto whitespace-nowrap py-2 scrollbar-hide">
+                <button class="tab-button px-4 py-2 mx-1 font-medium rounded-t-md text-gray-600 hover:bg-blue-100 hover:text-blue-700 focus:outline-none active" data-tab="basics">程式基礎</button>
+                <button class="tab-button px-4 py-2 mx-1 font-medium rounded-t-md text-gray-600 hover:bg-blue-100 hover:text-blue-700 focus:outline-none" data-tab="control">流程控制</button>
+                <button class="tab-button px-4 py-2 mx-1 font-medium rounded-t-md text-gray-600 hover:bg-blue-100 hover:text-blue-700 focus:outline-none" data-tab="functions">函數與遞迴</button>
+                <button class="tab-button px-4 py-2 mx-1 font-medium rounded-t-md text-gray-600 hover:bg-blue-100 hover:text-blue-700 focus:outline-none" data-tab="arrays">陣列與字串</button>
+                <button class="tab-button px-4 py-2 mx-1 font-medium rounded-t-md text-gray-600 hover:bg-blue-100 hover:text-blue-700 focus:outline-none" data-tab="algo">演算法與除錯</button>
+                <button class="tab-button px-4 py-2 mx-1 font-medium rounded-t-md text-gray-600 hover:bg-blue-100 hover:text-blue-700 focus:outline-none" data-tab="final">考前衝刺</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto max-w-7xl p-4 md:p-8">
+
+        <!-- Tab: 程式基礎 -->
+        <section id="basics" class="tab-content active">
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 space-y-12">
+                <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-gray-200 pb-4">一、程式語言基礎</h2>
+                
+                <!-- 觀念教學 -->
+                <div class="space-y-10">
+                    <div>
+                        <h3 class="text-2xl font-semibold text-blue-700 mb-4">1.1 變數與資料型態</h3>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <p class="mb-4 text-lg">變數是程式中用來儲存資料的命名空間，每個變數都有特定的資料型態，決定了它可以儲存的資料種類與大小。</p>
+                                <h4 class="text-xl font-medium text-gray-800 mt-6 mb-3">基本資料型態</h4>
+                                <ul class="list-disc pl-6 space-y-2">
+                                    <li><strong>int</strong>：整數型態，通常佔 4 bytes。</li>
+                                    <li><strong>float</strong>：單精度浮點數，通常佔 4 bytes。</li>
+                                    <li><strong>double</strong>：雙精度浮點數，通常佔 8 bytes。</li>
+                                    <li><strong>char</strong>：字元型態，佔 1 byte。</li>
+                                    <li><strong>_Bool</strong> 或 <strong>bool</strong>：布林型態，值為 0 (false) 或 1 (true)。</li>
+                                </ul>
+                            </div>
+                            <div class="bg-slate-100 border border-slate-200 p-4 rounded-lg">
+                                <h4 class="text-lg font-medium mb-3">變數宣告與使用範例</h4>
+                                <pre class="text-sm"><code>#include <stdio.h>
+int main() {
+    int age = 18;
+    float height = 175.5f;
+    char grade = 'A';
+    
+    printf("年齡: %d 歲\n", age);
+    printf("身高: %.1f 公分\n", height);
+    printf("成績等級: %c\n", grade);
+    
+    return 0;
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-2xl font-semibold text-blue-700 mb-4">1.2 運算子</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full bg-white border border-gray-200 text-sm">
+                                <thead>
+                                    <tr class="bg-gray-50">
+                                        <th class="py-2 px-4 border-b text-left">類型</th>
+                                        <th class="py-2 px-4 border-b text-left">運算子</th>
+                                        <th class="py-2 px-4 border-b text-left">說明</th>
+                                        <th class="py-2 px-4 border-b text-left">範例</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td class="py-2 px-4 border-b font-semibold" rowspan="5">算術</td><td class="py-2 px-4 border-b">+</td><td class="py-2 px-4 border-b">加法</td><td class="py-2 px-4 border-b">a + b</td></tr>
+                                    <tr><td class="py-2 px-4 border-b">-</td><td class="py-2 px-4 border-b">減法</td><td class="py-2 px-4 border-b">a - b</td></tr>
+                                    <tr><td class="py-2 px-4 border-b">*</td><td class="py-2 px-4 border-b">乘法</td><td class="py-2 px-4 border-b">a * b</td></tr>
+                                    <tr><td class="py-2 px-4 border-b">/</td><td class="py-2 px-4 border-b">除法</td><td class="py-2 px-4 border-b">a / b</td></tr>
+                                    <tr><td class="py-2 px-4 border-b">%</td><td class="py-2 px-4 border-b">取餘數</td><td class="py-2 px-4 border-b">a % b</td></tr>
+                                    <tr><td class="py-2 px-4 border-b font-semibold" rowspan="6">關係</td><td class="py-2 px-4 border-b">==</td><td class="py-2 px-4 border-b">等於</td><td class="py-2 px-4 border-b">a == b</td></tr>
+                                    <tr><td class="py-2 px-4 border-b">!=</td><td class="py-2 px-4 border-b">不等於</td><td class="py-2 px-4 border-b">a != b</td></tr>
+                                    <tr><td class="py-2 px-4 border-b">></td><td class="py-2 px-4 border-b">大於</td><td class="py-2 px-4 border-b">a > b</td></tr>
+                                    <tr><td class="py-2 px-4 border-b"><</td><td class="py-2 px-4 border-b">小於</td><td class="py-2 px-4 border-b">a < b</td></tr>
+                                    <tr><td class="py-2 px-4 border-b">>=</td><td class="py-2 px-4 border-b">大於等於</td><td class="py-2 px-4 border-b">a >= b</td></tr>
+                                    <tr><td class="py-2 px-4 border-b"><=</td><td class="py-2 px-4 border-b">小於等於</td><td class="py-2 px-4 border-b">a <= b</td></tr>
+                                    <tr><td class="py-2 px-4 border-b font-semibold" rowspan="3">邏輯</td><td class="py-2 px-4 border-b">&&</td><td class="py-2 px-4 border-b">邏輯 AND</td><td class="py-2 px-4 border-b">a && b</td></tr>
+                                    <tr><td class="py-2 px-4 border-b">||</td><td class="py-2 px-4 border-b">邏輯 OR</td><td class="py-2 px-4 border-b">a || b</td></tr>
+                                    <tr><td class="py-2 px-4 border-b">!</td><td class="py-2 px-4 border-b">邏輯 NOT</td><td class="py-2 px-4 border-b">!a</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-2xl font-semibold text-blue-700 mb-4">1.3 輸入與輸出</h3>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="text-xl font-medium text-gray-800 mb-3">printf 函數</h4>
+                                <p class="mb-3">用於格式化輸出資料到螢幕。<code>printf("格式化字串", 參數...);</code></p>
+                                <h5 class="text-lg font-medium mt-4 mb-2">常用格式化符號</h5>
+                                <ul class="list-disc pl-6 space-y-1">
+                                    <li><code>%d</code> - 整數, <code>%f</code> - 浮點數, <code>%c</code> - 字元, <code>%s</code> - 字串</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-medium text-gray-800 mb-3">scanf 函數</h4>
+                                <p class="mb-3">用於從鍵盤讀取格式化資料。<code>scanf("格式化字串", &變數...);</code></p>
+                                <div class="bg-yellow-100 border-l-4 border-yellow-400 p-4 mt-4">
+                                    <p class="text-yellow-800"><strong>注意：</strong>使用 scanf 時，除了字串外，其他變數前需加上 <code>&</code> 符號（取址運算子）。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 觀念總結與自我檢測 -->
+                <div class="bg-blue-50 p-6 rounded-lg mt-8 space-y-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-blue-800 mb-3">本章重點整理</h3>
+                        <ul class="list-disc pl-6 space-y-2">
+                            <li>C 語言基本資料型態包含 int, float, double, char。</li>
+                            <li>運算子分為算術、關係和邏輯三大類，有優先級區別。</li>
+                            <li><code>printf</code> 用於輸出，<code>scanf</code> 用於輸入，兩者都使用格式化字串。</li>
+                            <li>整數除法結果為整數，如 <code>5/2</code> 結果為 2，而非 2.5。</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">自我檢測</h3>
+                        <div class="bg-gray-100 p-6 rounded-lg space-y-3">
+                            <p>1. 若 a=5, b=2，則 a/b 的結果為何？ (A) 2.5 (B) 2 (C) 3 (D) 2.0</p>
+                            <p>2. 使用 scanf 讀取整數變數 num 的正確語法是？ (A) scanf("%d", num); (B) scanf("%d", &num); (C) scanf(&num); (D) scanf("%d", *num);</p>
+                            <div class="text-right mt-4">
+                                <button class="toggle-answers px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" data-target="answers-1">顯示答案</button>
+                            </div>
+                            <div id="answers-1" class="hidden mt-4 bg-white p-4 rounded-lg border">
+                                <p><strong>答案：</strong> 1. B, 2. B</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 實戰演練 -->
+                <div class="mt-12 pt-8 border-t-2 border-dashed border-gray-300">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">實戰演練</h2>
+                    <h3 class="text-2xl font-semibold text-indigo-700 mb-4">主題：變數作用域 (Scope)</h3>
+                    <div class="bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded-r-lg mb-6">
+                        <p class="font-bold text-indigo-800">核心觀念</p>
+                        <p class="text-indigo-700"><strong>全域變數</strong>在整個程式中都可見；<strong>區域變數</strong>只在宣告它的函式或區塊內有效。當區域變數與全域變數同名時，區域變數會「遮蔽」全域變數。</p>
+                    </div>
+                    <div class="question-container bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                        <h4 class="text-xl font-bold mb-4">範例題目 1</h4>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="code-area"><p class="font-semibold mb-2">程式碼：</p><pre class="bg-gray-50 p-4 rounded-md text-sm"><code>int s = 1; //全域變數
+void add (int a) {
+    int s = 6;
+    for(; a>=0; a=a-1) {
+        printf("%d,", s);
+        s++;
+    }
+    printf("%d,", s);
+}
+int main () {
+    printf("%d,", s);
+    add(s);
+    printf("%d,", s);
+    s = 9;
+    printf("%d", s);
+    return 0;
+}</code></pre></div>
+                            <div class="options-area"><p class="font-semibold mb-2">問題：請問程式執行後輸出為何？</p><div class="space-y-2"><p>(A) 1,6,7,7,8,8,9</p><p>(B) 1,6,7,8,1,9</p><p>(C) 1,6,7,8,9,9,9</p><p>(D) 1,6,7,7,8,9,9</p></div><div class="mt-6 flex flex-wrap gap-4 items-center"><button class="show-analysis-btn bg-blue-100 text-blue-800 font-bold py-2 px-4 rounded-lg hover:bg-blue-200" data-target="#analysis-popup-1"><i class="fa-solid fa-magnifying-glass-chart mr-2"></i>查看分析</button><details class="w-full md:w-auto"><summary class="font-bold text-blue-600 cursor-pointer select-none">顯示答案</summary><div class="mt-2 p-3 bg-gray-100 rounded-md"><p><strong>答案：(B) 1,6,7,8,1,9</strong></p></div></details></div></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Tab: 流程控制 -->
+        <section id="control" class="tab-content">
+             <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 space-y-12">
+                <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-gray-200 pb-4">二、流程控制</h2>
+                
+                <!-- 觀念教學 -->
+                <div class="space-y-10">
+                    <div>
+                        <h3 class="text-2xl font-semibold text-blue-700 mb-4">2.1 條件判斷</h3>
+                        <p class="mb-4 text-lg">條件判斷是程式中根據特定條件決定執行路徑的結構，主要包括 <code>if-else</code> 和 <code>switch</code> 語句。</p>
+                        <div class="grid md:grid-cols-2 gap-6 mt-6">
+                            <div><h4 class="text-xl font-medium text-gray-800 mb-3">if-else 語句</h4><pre><code>if (score >= 90) {
+    // A
+} else if (score >= 80) {
+    // B
+} else {
+    // C or F
+}</code></pre></div>
+                            <div><h4 class="text-xl font-medium text-gray-800 mb-3">switch 語句</h4><pre><code>switch (grade) {
+    case 'A': puts("Excellent"); break;
+    case 'B': puts("Good"); break;
+    default: puts("Keep trying");
+}</code></pre></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold text-blue-700 mb-4">2.2 迴圈結構</h3>
+                        <p class="mb-4 text-lg">迴圈結構用於重複執行特定程式碼區塊，主要包括 <code>for</code>、<code>while</code> 和 <code>do-while</code> 三種形式。</p>
+                         <div class="grid md:grid-cols-3 gap-6 mt-6">
+                            <div><h4 class="text-xl font-medium text-gray-800 mb-3">for 迴圈</h4><p>適合已知迴圈次數。</p><pre><code>for (int i=0; i<10; i++) { ... }</code></pre></div>
+                            <div><h4 class="text-xl font-medium text-gray-800 mb-3">while 迴圈</h4><p>條件式迴圈。</p><pre><code>while (x > 0) { ... }</code></pre></div>
+                            <div><h4 class="text-xl font-medium text-gray-800 mb-3">do-while 迴圈</h4><p>至少執行一次。</p><pre><code>do { ... } while (cond);</code></pre></div>
+                        </div>
+                    </div>
+                    <div>
+                         <h3 class="text-2xl font-semibold text-blue-700 mb-4">2.3 跳躍語句</h3>
+                         <div class="grid md:grid-cols-3 gap-6 mt-6">
+                            <div class="bg-gray-50 p-4 rounded-lg"><h4 class="text-xl font-medium text-gray-800 mb-3">break</h4><p>用於提前結束迴圈或 switch 語句。</p></div>
+                            <div class="bg-gray-50 p-4 rounded-lg"><h4 class="text-xl font-medium text-gray-800 mb-3">continue</h4><p>用於跳過迴圈的當前迭代，直接進入下一次迭代。</p></div>
+                            <div class="bg-gray-50 p-4 rounded-lg"><h4 class="text-xl font-medium text-gray-800 mb-3">return</h4><p>用於結束函數的執行並返回一個值。</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 觀念總結與自我檢測 -->
+                <div class="bg-blue-50 p-6 rounded-lg mt-8 space-y-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-blue-800 mb-3">本章重點整理</h3>
+                        <ul class="list-disc pl-6 space-y-2">
+                            <li><code>for</code> 迴圈適合已知次數；<code>while</code> 適合條件式；<code>do-while</code> 至少執行一次。</li>
+                            <li><code>switch</code> 語句中若沒有 <code>break</code>，會發生 fall-through 現象。</li>
+                            <li><code>break</code> 是跳出迴圈；<code>continue</code> 是跳過本輪，進入下一輪。</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">自我檢測</h3>
+                         <div class="bg-gray-100 p-6 rounded-lg space-y-3">
+                            <p>1. 以下哪個語句用於跳過迴圈的當前迭代？ (A) break (B) continue (C) return (D) goto</p>
+                            <p>2. 以下程式碼輸出為何？ <code>int s=0; for(int i=1;i<5;i++){ if(i%2==0) continue; s+=i; } printf("%d",s);</code> (A) 5 (B) 9 (C) 15 (D) 4</p>
+                            <div class="text-right mt-4"><button class="toggle-answers px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" data-target="answers-2">顯示答案</button></div>
+                            <div id="answers-2" class="hidden mt-4 bg-white p-4 rounded-lg border"><p><strong>答案：</strong> 1. B, 2. D (1+3=4)</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 實戰演練 -->
+                 <div class="mt-12 pt-8 border-t-2 border-dashed border-gray-300">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">實戰演練</h2>
+                    <h3 class="text-2xl font-semibold text-indigo-700 mb-4">主題：迴圈控制 break vs. continue</h3>
+                    <div class="bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded-r-lg mb-6"><p class="font-bold text-indigo-800">核心觀念</p><ul class="list-disc list-inside text-indigo-700"><li><code>break</code>: 完全終止並**跳出**當前迴圈。</li><li><code>continue</code>: **略過**當前這一輪的剩餘程式碼，直接進入下一輪。</li></ul></div>
+                    <div class="question-container bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                        <h4 class="text-xl font-bold mb-4">範例題目 2</h4>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="code-area"><p class="font-semibold mb-2">程式碼：</p><pre class="bg-gray-50 p-4 rounded-md text-sm"><code>int count = 0;
+for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4; j++) {
+        if (i == j) {
+            continue;
+        }
+        count++;
+    }
+}
+printf("%d", count);</code></pre></div>
+                            <div class="options-area"><p class="font-semibold mb-2">問題：請問程式執行後輸出為何？</p><div class="space-y-2"><p>(A) 16</p><p>(B) 12</p><p>(C) 10</p><p>(D) 6</p></div><div class="mt-6 flex flex-wrap gap-4 items-center"><button class="show-analysis-btn bg-blue-100 text-blue-800 font-bold py-2 px-4 rounded-lg hover:bg-blue-200" data-target="#analysis-popup-2"><i class="fa-solid fa-magnifying-glass-chart mr-2"></i>查看分析</button><details class="w-full md:w-auto"><summary class="font-bold text-blue-600 cursor-pointer select-none">顯示答案</summary><div class="mt-2 p-3 bg-gray-100 rounded-md"><p><strong>答案：(B) 12</strong></p><hr class="my-2"><p><strong>思考題：</strong>如果把 `continue` 換成 `break`，答案會是多少？ (答案是 6)</p></div></details></div></div>
+                        </div>
+                    </div>
+                </div>
+
+             </div>
+        </section>
+        
+        <!-- Tab: 函數與遞迴 -->
+        <section id="functions" class="tab-content">
+             <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 space-y-12">
+                <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-gray-200 pb-4">三、函數與遞迴</h2>
+                
+                <!-- 觀念教學 -->
+                <div class="space-y-10">
+                    <div>
+                        <h3 class="text-2xl font-semibold text-blue-700 mb-4">3.1 函數定義與呼叫</h3>
+                        <p class="mb-4 text-lg">函數是一段可重複使用的程式碼，用於執行特定任務。</p>
+                        <pre class="bg-slate-100 border p-4 rounded-lg text-sm"><code>// 函數定義
+int add(int a, int b) {
+    return a + b;
+}
+
+// 函數呼叫
+int sum = add(5, 3); // sum is 8</code></pre>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold text-blue-700 mb-4">3.2 傳值 vs. 傳址</h3>
+                        <div class="grid md:grid-cols-2 gap-6 mt-6">
+                            <div class="bg-gray-50 p-4 rounded-lg"><h4 class="text-xl font-medium text-gray-800 mb-3">傳值 (Pass by Value)</h4><p>函數接收的是參數值的**副本**，對參數的修改**不會**影響原始變數。這是 C 語言的預設方式。</p></div>
+                            <div class="bg-gray-50 p-4 rounded-lg"><h4 class="text-xl font-medium text-gray-800 mb-3">傳址 (Pass by Reference)</h4><p>函數接收的是參數的**記憶體位址** (透過指標)，對參數的修改**會**直接影響原始變數。</p></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold text-blue-700 mb-4">3.3 遞迴 (Recursion)</h3>
+                        <p class="mb-4 text-lg">遞迴是一種函數直接或間接呼叫自身的程式設計技巧。遞迴函數通常包含**基本情況**（終止條件）和**遞迴情況**。</p>
+                        <pre class="bg-slate-100 border p-4 rounded-lg text-sm"><code>// 遞迴範例：計算階乘
+int factorial(int n) {
+    // 基本情況
+    if (n <= 1) return 1;
+    // 遞迴情況
+    return n * factorial(n - 1);
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- 觀念總結與自我檢測 -->
+                <div class="bg-blue-50 p-6 rounded-lg mt-8 space-y-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-blue-800 mb-3">本章重點整理</h3>
+                        <ul class="list-disc pl-6 space-y-2">
+                            <li>傳值不影響原始變數；傳址（用指標）會影響。</li>
+                            <li>遞迴必須有明確的終止條件，否則會導致無限遞迴和堆疊溢位。</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">自我檢測</h3>
+                         <div class="bg-gray-100 p-6 rounded-lg space-y-3">
+                            <p>1. 遞迴函數必須具備的條件是？ (A) 至少一個參數 (B) 返回值必須是整數 (C) 明確的終止條件 (D) 必須使用全域變數</p>
+                            <p>2. 以下程式碼輸出為何？ <code>int f(int n){if(n<=1)return 1;return n+f(n-1);} printf("%d",f(4));</code> (A) 24 (B) 10 (C) 4 (D) 9</p>
+                            <div class="text-right mt-4"><button class="toggle-answers px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" data-target="answers-3">顯示答案</button></div>
+                            <div id="answers-3" class="hidden mt-4 bg-white p-4 rounded-lg border"><p><strong>答案：</strong> 1. C, 2. B (4+3+2+1=10)</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 實戰演練 -->
+                <div class="mt-12 pt-8 border-t-2 border-dashed border-gray-300 space-y-12">
+                    <h2 class="text-3xl font-bold text-gray-800">實戰演練</h2>
+                    <!-- 題目 1 -->
+                    <div>
+                        <h3 class="text-2xl font-semibold text-indigo-700 mb-4">主題：傳值 (Pass-by-Value)</h3>
+                        <div class="bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded-r-lg mb-6"><p class="font-bold text-indigo-800">核心觀念</p><p class="text-indigo-700">函式接收到的是參數的「複製品」。在函式內部對這個複製品做任何修改，都**不會**影響到呼叫端的原始變數。</p></div>
+                        <div class="question-container bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                            <h4 class="text-xl font-bold mb-4">範例題目 3</h4>
+                             <div class="grid md:grid-cols-2 gap-6">
+                                <div class="code-area"><p class="font-semibold mb-2">程式碼：</p><pre class="bg-gray-50 p-4 rounded-md text-sm"><code>void f(int x, int y) {
+    int tem = x; x = y; y = tem;
+}
+int main() {
+    int x = 2, y = 3;
+    f(x, y);
+    printf("%d", (x-y)*(x+y)/2);
+    return 0;
+}</code></pre></div>
+                                <div class="options-area"><p class="font-semibold mb-2">問題：請問程式執行完後，輸出結果為何？</p><div class="space-y-2"><p>(A) 2</p><p>(B) 3</p><p>(C) -2</p><p>(D) -3</p></div><div class="mt-6 flex flex-wrap gap-4 items-center"><button class="show-analysis-btn bg-blue-100 text-blue-800 font-bold py-2 px-4 rounded-lg hover:bg-blue-200" data-target="#analysis-popup-3"><i class="fa-solid fa-magnifying-glass-chart mr-2"></i>查看分析</button><details class="w-full md:w-auto"><summary class="font-bold text-blue-600 cursor-pointer select-none">顯示答案</summary><div class="mt-2 p-3 bg-gray-100 rounded-md"><p><strong>答案：(C) -2</strong></p></div></details></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 題目 2 -->
+                    <div class="mt-12">
+                        <h3 class="text-2xl font-semibold text-indigo-700 mb-4">主題：遞迴 (Recursion)</h3>
+                        <div class="bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded-r-lg mb-6"><p class="font-bold text-indigo-800">核心觀念</p><p class="text-indigo-700">遞迴函式必須包含：1. <strong>基底條件 (Base Case)</strong>：終止遞迴。 2. <strong>遞迴關係 (Recursive Step)</strong>：分解問題並呼叫自身。</p></div>
+                        <div class="question-container bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                            <h4 class="text-xl font-bold mb-4">範例題目 4</h4>
+                             <div class="grid md:grid-cols-2 gap-6">
+                                <div class="code-area"><p class="font-semibold mb-2">程式碼：</p><pre class="bg-gray-50 p-4 rounded-md text-sm"><code>int f (int i) {
+    if (i > 0)
+        if (((i/2)%2) == 0) return f(i-2) * i;
+        else return f(i-2) * (-i);
+    else return 1;
+}</code></pre></div>
+                                <div class="options-area"><p class="font-semibold mb-2">問題：執行 f(10) 的回傳結果為何？</p><div class="space-y-2"><p>(A) 1</p><p>(B) 3840</p><p>(C) -3840</p><p>(D) 無窮迴圈</p></div><div class="mt-6 flex flex-wrap gap-4 items-center"><button class="show-analysis-btn bg-blue-100 text-blue-800 font-bold py-2 px-4 rounded-lg hover:bg-blue-200" data-target="#analysis-popup-4"><i class="fa-solid fa-magnifying-glass-chart mr-2"></i>查看分析</button><details class="w-full md:w-auto"><summary class="font-bold text-blue-600 cursor-pointer select-none">顯示答案</summary><div class="mt-2 p-3 bg-gray-100 rounded-md"><p><strong>答案：(C) -3840</strong></p></div></details></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+             </div>
+        </section>
+
+        <!-- Tab: 陣列與字串 -->
+        <section id="arrays" class="tab-content">
+             <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 space-y-12">
+                <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-gray-200 pb-4">四、陣列與字串</h2>
+                
+                <!-- 觀念教學 -->
+                <div class="space-y-10">
+                    <div>
+                        <h3 class="text-2xl font-semibold text-blue-700 mb-4">4.1 一維與二維陣列</h3>
+                        <p class="mb-4 text-lg"><strong>陣列 (Array)</strong> 是一組儲存在連續記憶體空間的相同型態元素集合。可以透過索引 (index) 存取，索引從 0 開始。</p>
+                        <div class="grid md:grid-cols-2 gap-6 mt-6">
+                            <pre class="bg-slate-100 border p-4 rounded-lg text-sm"><code>// 一維陣列
+int scores[5] = {88, 92, 75, 100, 64};
+scores[2] = 78; // 修改第三個元素
+</code></pre>
+                            <pre class="bg-slate-100 border p-4 rounded-lg text-sm"><code>// 二維陣列 (矩陣)
+int matrix[2][3] = {
+    {1, 2, 3},
+    {4, 5, 6}
+};
+int val = matrix[1][1]; // val is 5
+</code></pre>
+                        </div>
+                    </div>
+                     <div>
+                        <h3 class="text-2xl font-semibold text-blue-700 mb-4">4.2 字串處理</h3>
+                        <p class="mb-4 text-lg">在 C 語言中，字串是以 null 字元 (<code>'\0'</code>) 結尾的字元陣列。<code>string.h</code> 標頭檔中提供了一系列函數來處理字串。</p>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full bg-white border text-sm">
+                                <thead><tr class="bg-gray-50"><th class="py-2 px-4 border-b text-left">函數</th><th class="py-2 px-4 border-b text-left">功能</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="py-2 px-4 border-b"><code>strlen(s)</code></td><td class="py-2 px-4 border-b">回傳字串長度 (不含'\0')</td></tr>
+                                    <tr><td class="py-2 px-4 border-b"><code>strcpy(dest, src)</code></td><td class="py-2 px-4 border-b">複製字串</td></tr>
+                                    <tr><td class="py-2 px-4 border-b"><code>strcat(dest, src)</code></td><td class="py-2 px-4 border-b">連接字串</td></tr>
+                                    <tr><td class="py-2 px-4 border-b"><code>strcmp(s1, s2)</code></td><td class="py-2 px-4 border-b">比較字串 (回傳 <0, 0, >0)</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 觀念總結與自我檢測 -->
+                <div class="bg-blue-50 p-6 rounded-lg mt-8 space-y-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-blue-800 mb-3">本章重點整理</h3>
+                        <ul class="list-disc pl-6 space-y-2">
+                            <li>陣列索引從 0 開始。宣告 <code>A[N]</code>，合法索引為 <code>0</code> 到 <code>N-1</code>。</li>
+                            <li>存取超出範圍的索引會導致「越界」(Undefined Behavior)。</li>
+                            <li>C 字串以 <code>'\0'</code> 結尾，宣告時需預留空間。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 實戰演練 -->
+                 <div class="mt-12 pt-8 border-t-2 border-dashed border-gray-300 space-y-12">
+                    <h2 class="text-3xl font-bold text-gray-800">實戰演練</h2>
+                    <!-- 題目 1 -->
+                    <div>
+                        <h3 class="text-2xl font-semibold text-indigo-700 mb-4">主題：陣列索引與越界</h3>
+                        <div class="bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded-r-lg mb-6"><p class="font-bold text-indigo-800">核心觀念</p><p class="text-indigo-700">宣告陣列 <code>A[N]</code>，有效索引是 <code>0</code> 到 <code>N-1</code>。注意迴圈中索引的變化是否會超出此範圍。</p></div>
+                        <div class="question-container bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                            <h4 class="text-xl font-bold mb-4">範例題目 5</h4>
+                             <div class="grid md:grid-cols-2 gap-6">
+                                <div class="code-area"><p class="font-semibold mb-2">程式碼片段：</p><pre class="bg-gray-50 p-4 rounded-md text-sm"><code>int i, n, A[100];
+scanf ("%d", &n);
+for (i=0; i!=n; i=i+1) {
+    A[i] = i;
+    i = i + 1;
+}</code></pre></div>
+                                <div class="options-area"><p class="font-semibold mb-2">問題：哪個n值**不會**造成超過陣列A的存取範圍？</p><div class="space-y-2"><p>(A) 69</p><p>(B) 89</p><p>(C) 98</p><p>(D) 202</p></div><div class="mt-6 flex flex-wrap gap-4 items-center"><button class="show-analysis-btn bg-blue-100 text-blue-800 font-bold py-2 px-4 rounded-lg hover:bg-blue-200" data-target="#analysis-popup-5"><i class="fa-solid fa-magnifying-glass-chart mr-2"></i>查看分析</button><details class="w-full md:w-auto"><summary class="font-bold text-blue-600 cursor-pointer select-none">顯示答案</summary><div class="mt-2 p-3 bg-gray-100 rounded-md"><p><strong>答案：(C) 98</strong></p></div></details></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 題目 2 -->
+                    <div class="mt-12">
+                        <h3 class="text-2xl font-semibold text-indigo-700 mb-4">主題：使用陣列模擬鏈結串列</h3>
+                        <div class="bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded-r-lg mb-6"><p class="font-bold text-indigo-800">核心觀念</p><p class="text-indigo-700">用一個整數陣列成員 (如 `next`) 來儲存下一個元素在陣列中的「索引」，以此模擬指標串起資料的行為。</p></div>
+                        <div class="question-container bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                            <h4 class="text-xl font-bold mb-4">範例題目 6</h4>
+                             <div class="grid md:grid-cols-2 gap-6">
+                                <div class="code-area"><p class="font-semibold mb-2">程式碼與說明：</p><pre class="bg-gray-50 p-4 rounded-md text-sm"><code>struct element { char data; int next; };
+// RemoveNextElement程序用來移除 `current` 的下一個元素。
+void RemoveNextElement(element list[], int current) {
+    if (list[current].next != -1) {
+        // ____(??)____ ;
+    }
+}</code></pre></div>
+                                <div class="options-area"><p class="font-semibold mb-2">問題：空格中應填入何者？</p><div class="space-y-2"><p>(A) `list[current].next = current;`</p><p>(B) `list[current].next = list[list[current].next].next;`</p><p>(C) `current = list[list[current].next].next;`</p><p>(D) `list[list[current].next].next = list[current].next;`</p></div><div class="mt-6 flex flex-wrap gap-4 items-center"><button class="show-analysis-btn bg-blue-100 text-blue-800 font-bold py-2 px-4 rounded-lg hover:bg-blue-200" data-target="#analysis-popup-6"><i class="fa-solid fa-magnifying-glass-chart mr-2"></i>查看分析</button><details class="w-full md:w-auto"><summary class="font-bold text-blue-600 cursor-pointer select-none">顯示答案</summary><div class="mt-2 p-3 bg-gray-100 rounded-md"><p><strong>答案：(B)</strong></p></div></details></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+        </section>
+
+        <!-- Tab: 演算法與除錯 -->
+        <section id="algo" class="tab-content">
+             <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 space-y-12">
+                <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-gray-200 pb-4">五、演算法與除錯</h2>
+                <div class="space-y-12">
+                    <!-- 題目 1 -->
+                    <div>
+                        <h3 class="text-2xl font-semibold text-indigo-700 mb-4">主題：程式除錯與邊界條件</h3>
+                        <div class="bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded-r-lg mb-6"><p class="font-bold text-indigo-800">核心觀念</p><p class="text-indigo-700">程式除錯不只是找語法錯誤，更重要的是找出「邏輯」上的瑕疵。要特別思考那些能讓程式跑出非預期結果的「邊界案例」或「特殊輸入」。</p></div>
+                        <div class="question-container bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                            <h4 class="text-xl font-bold mb-4">範例題目 7</h4>
+                             <div class="grid md:grid-cols-2 gap-6">
+                                <div class="code-area"><p class="font-semibold mb-2">程式碼：</p><pre class="bg-gray-50 p-4 rounded-md text-sm"><code>// 此程式擬找出陣列 A[] 中的最大值(M)和最小值(N)
+int M = -1, N = 101, s = 3;
+int A[] = { ? };
+for (int i=0; i<s; i++) {
+    if (A[i]>M) { M = A[i]; }
+    else if (A[i]<N) { N = A[i]; }
+}</code></pre></div>
+                                <div class="options-area"><p class="font-semibold mb-2">問題：A[]如何設定就可測出程式有誤？</p><div class="space-y-2"><p>(A) {90, 80, 100}</p><p>(B) {80, 90, 100}</p><p>(C) {100, 90, 80}</p><p>(D) {90, 100, 80}</p></div><div class="mt-6 flex flex-wrap gap-4 items-center"><button class="show-analysis-btn bg-blue-100 text-blue-800 font-bold py-2 px-4 rounded-lg hover:bg-blue-200" data-target="#analysis-popup-7"><i class="fa-solid fa-magnifying-glass-chart mr-2"></i>查看分析</button><details class="w-full md:w-auto"><summary class="font-bold text-blue-600 cursor-pointer select-none">顯示答案</summary><div class="mt-2 p-3 bg-gray-100 rounded-md"><p><strong>答案：(B) {80, 90, 100}</strong></p></div></details></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 題目 2 -->
+                    <div class="mt-12">
+                        <h3 class="text-2xl font-semibold text-indigo-700 mb-4">主題：時間複雜度 (Big-O)</h3>
+                        <div class="bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded-r-lg mb-6"><p class="font-bold text-indigo-800">核心觀念</p><p class="text-indigo-700">衡量演算法執行時間與輸入資料量 `n` 之間關係的指標，關注 `n` 趨近無限大時的成長趨勢。</p></div>
+                        <div class="question-container bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                            <h4 class="text-xl font-bold mb-4">範例題目 8</h4>
+                             <div class="grid md:grid-cols-2 gap-6">
+                                <div class="code-area"><p class="font-semibold mb-2">程式碼：</p><pre class="bg-gray-50 p-4 rounded-md text-sm"><code>void doSomething(int n) {
+    int count = 0;
+    for (int i = 0; i < n; i++) {
+        for (int j = i; j < n; j++) {
+            count++;
+        }
+    }
+}</code></pre></div>
+                                <div class="options-area"><p class="font-semibold mb-2">問題：此函式的時間複雜度為何？</p><div class="space-y-2"><p>(A) O(n)</p><p>(B) O(n log n)</p><p>(C) O(n<sup>2</sup>)</p><p>(D) O(2<sup>n</sup>)</p></div><div class="mt-6 flex flex-wrap gap-4 items-center"><button class="show-analysis-btn bg-blue-100 text-blue-800 font-bold py-2 px-4 rounded-lg hover:bg-blue-200" data-target="#analysis-popup-8"><i class="fa-solid fa-magnifying-glass-chart mr-2"></i>查看分析</button><details class="w-full md:w-auto"><summary class="font-bold text-blue-600 cursor-pointer select-none">顯示答案</summary><div class="mt-2 p-3 bg-gray-100 rounded-md"><p><strong>答案：(C) O(n<sup>2</sup>)</strong></p></div></details></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </section>
+        
+        <!-- Tab: 考前衝刺 -->
+        <section id="final" class="tab-content">
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 space-y-8">
+                <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-gray-200 pb-4">六、考前衝刺提醒</h2>
+                <div class="grid md:grid-cols-2 gap-8 text-lg">
+                    <div class="bg-green-50 p-6 rounded-lg border border-green-200"><h3 class="text-2xl font-bold text-green-700 mb-3"><i class="fa-solid fa-pencil-ruler mr-2"></i>靜心追蹤程式碼</h3><p class="text-green-800">不要急，在紙上或心中一步步模擬執行流程，特別是迴圈和遞迴，記錄關鍵變數的值。</p></div>
+                    <div class="bg-purple-50 p-6 rounded-lg border border-purple-200"><h3 class="text-2xl font-bold text-purple-700 mb-3"><i class="fa-solid fa-sitemap mr-2"></i>畫圖輔助</h3><p class="text-purple-800">對於陣列、遞迴、鏈結串列等抽象概念，畫圖可以化抽象為具體，幫助釐清邏輯關係。</p></div>
+                    <div class="bg-yellow-50 p-6 rounded-lg border border-yellow-200"><h3 class="text-2xl font-bold text-yellow-700 mb-3"><i class="fa-solid fa-flag-checkered mr-2"></i>注意邊界條件</h3><p class="text-yellow-800">迴圈的 <code>i < n</code> vs. <code>i <= n</code>，陣列的 <code>A[0]</code> 和 <code>A[n-1]</code>，遞迴的基底條件都是陷阱熱區。</p></div>
+                    <div class="bg-red-50 p-6 rounded-lg border border-red-200"><h3 class="text-2xl font-bold text-red-700 mb-3"><i class="fa-solid fa-lightbulb mr-2"></i>辨識常見考點</h3><p class="text-red-800">作用域、參數傳遞(傳值/傳址)、短路求值、常見演算法(搜尋/排序)都是一再出現的觀念。</p></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center mt-8 mb-6">
+        <p class="text-gray-600">114年6月15日一定要去輔大考試，寫好寫滿，不可以落跑喔！</p>
+        <p class="text-gray-500 text-sm mt-1">Copyright © Liyuchiutiger Gongminshen</p>
+    </footer>
+
+    <!-- All Analysis Popups -->
+    <div id="analysis-popup-1" class="analysis-popup bg-white rounded-lg shadow-2xl border" style="width:400px;height:350px;top:150px;left:calc(50% - 200px);"><div class="analysis-header flex justify-between items-center p-3 bg-blue-100 border-b"><span class="font-bold text-blue-800">題目分析：變數作用域</span><i class="fa-solid fa-xmark close-btn text-gray-500 hover:text-red-600 cursor-pointer text-xl"></i></div><div class="analysis-body p-4 overflow-y-auto text-gray-700"><ol class="list-decimal list-inside space-y-2"><li><code>main</code> 開始，印出<strong>全域變數</strong> <code>s</code>，輸出 "1,"。</li><li>呼叫 <code>add(1)</code>。進入 <code>add</code> 函式，宣告一個新的**區域變數** <code>s</code> 並設為 6。這個區域變數遮蔽了全域變數。</li><li><code>for</code> 迴圈執行 (a從1到0)：<ul class="list-disc list-inside ml-4 mt-1"><li>a=1: 印出區域 <code>s</code> (6)，<code>s</code> 變 7。輸出 "6,"。</li><li>a=0: 印出區域 <code>s</code> (7)，<code>s</code> 變 8。輸出 "7,"。</li></ul></li><li>迴圈結束，印出區域 <code>s</code>，此時值為 8。輸出 "8,"。<code>add</code> 函式結束，其區域變數 `s` 被銷毀。</li><li>回到 <code>main</code>，印出<strong>全域變數</strong> <code>s</code>，它的值從未被 <code>add</code> 函式改變，仍是 1。輸出 "1,"。</li><li>全域 <code>s</code> 被設為 9，然後印出。輸出 "9"。</li><li>組合起來：1,6,7,8,1,9。</li></ol></div><div class="resizer"></div></div>
+    <div id="analysis-popup-2" class="analysis-popup bg-white rounded-lg shadow-2xl border" style="width:400px;height:280px;top:200px;left:calc(50% - 200px);"><div class="analysis-header flex justify-between items-center p-3 bg-blue-100 border-b"><span class="font-bold text-blue-800">題目分析：continue</span><i class="fa-solid fa-xmark close-btn text-gray-500 hover:text-red-600 cursor-pointer text-xl"></i></div><div class="analysis-body p-4 overflow-y-auto text-gray-700"><ol class="list-decimal list-inside space-y-2"><li>雙層迴圈總執行次數理論上是 4 * 4 = 16 次。</li><li>關鍵在於 <code>if (i == j) { continue; }</code>。這表示當 `i` 和 `j` 值相等時，跳過該次的 <code>count++</code>，直接開始內層迴圈的下一次迭代。</li><li><code>i == j</code> 的情況有 (0,0), (1,1), (2,2), (3,3)，共 4 次。</li><li>因此，<code>count++</code> 實際執行次數是 16 - 4 = 12 次。</li></ol></div><div class="resizer"></div></div>
+    <div id="analysis-popup-3" class="analysis-popup bg-white rounded-lg shadow-2xl border" style="width:420px;height:380px;top:250px;left:calc(50% - 210px);"><div class="analysis-header flex justify-between items-center p-3 bg-blue-100 border-b"><span class="font-bold text-blue-800">題目分析：Pass-by-Value</span><i class="fa-solid fa-xmark close-btn text-gray-500 hover:text-red-600 cursor-pointer text-xl"></i></div><div class="analysis-body p-4 overflow-y-auto text-gray-700"><ol class="list-decimal list-inside space-y-3"><li><code>main</code> 中，<code>x=2, y=3</code>。</li><li>呼叫 <code>f(x, y)</code>，是「傳值」，函式 <code>f</code> 內部建立了自己的**區域變數** <code>x</code> 和 <code>y</code>，並將值(2,3)複製過來。</li><li>在 `f` 函式內部，`x` 和 `y` 的值被成功交換。但這一切只發生在 `f` 的世界裡。</li><li>`f` 函式結束，其內部變數被銷毀。</li><li>回到 `main`，這裡的 `x` 和 `y` **從未被改變**，依然是 2 和 3。</li><li>計算表達式：`(x-y)*(x+y)/2` -> `(2-3)*(2+3)/2` -> `(-1)*(5)/2` -> `-5/2`。</li><li>因是**整數除法**，`-5/2` 的結果是 -2。</li></ol></div><div class="resizer"></div></div>
+    <div id="analysis-popup-4" class="analysis-popup bg-white rounded-lg shadow-2xl border" style="width:420px;height:420px;top:150px;left:calc(50% - 210px);"><div class="analysis-header flex justify-between items-center p-3 bg-blue-100 border-b"><span class="font-bold text-blue-800">題目分析：追蹤遞迴</span><i class="fa-solid fa-xmark close-btn text-gray-500 hover:text-red-600 cursor-pointer text-xl"></i></div><div class="analysis-body p-4 overflow-y-auto text-gray-700"><p class="font-bold mb-2">追蹤呼叫過程：</p><ul class="space-y-1"><li><code>f(10)</code>: 10/2=5, 5%2=1 -> <code>f(8) * (-10)</code></li><li><code>f(8)</code>: 8/2=4, 4%2=0 -> <code>f(6) * 8</code></li><li><code>f(6)</code>: 6/2=3, 3%2=1 -> <code>f(4) * (-6)</code></li><li><code>f(4)</code>: 4/2=2, 2%2=0 -> <code>f(2) * 4</code></li><li><code>f(2)</code>: 2/2=1, 1%2=1 -> <code>f(0) * (-2)</code></li><li><code>f(0)</code>: i > 0 為 false -> <code>return 1</code> (基底)</li></ul><p class="font-bold mt-4 mb-2">由下往上組合結果：</p><pre class="bg-gray-50 p-3 rounded-md text-sm">f(0) = 1
+f(2) = 1 * -2 = -2
+f(4) = -2 * 4  = -8
+f(6) = -8 * -6 = 48
+f(8) = 48 * 8  = 384
+f(10)= 384 * -10 = -3840</pre></div><div class="resizer"></div></div>
+    <div id="analysis-popup-5" class="analysis-popup bg-white rounded-lg shadow-2xl border" style="width:420px;height:380px;top:250px;left:calc(50% - 210px);"><div class="analysis-header flex justify-between items-center p-3 bg-blue-100 border-b"><span class="font-bold text-blue-800">題目分析：迴圈陷阱</span><i class="fa-solid fa-xmark close-btn text-gray-500 hover:text-red-600 cursor-pointer text-xl"></i></div><div class="analysis-body p-4 overflow-y-auto text-gray-700"><p class="font-bold mb-2">關鍵陷阱：</p><p>在 <code>for</code> 迴圈內部，變數 `i` 被增加了**兩次**！所以每次迴圈 `i` 的總增量是 2。</p><ul class="list-disc list-inside space-y-2 mt-4"><li>陣列 <code>A</code> 的合法索引是 0 到 99。</li><li><strong>(A), (B):</strong> n 為奇數，i 永遠是偶數，<code>i!=n</code> 永遠為真，造成無限迴圈後越界。</li><li><strong>(D) 202:</strong> i 會跑到 100，執行 <code>A[100]</code> 造成越界。</li><li><strong>(C) 98:</strong> i 最後會是 96，執行 <code>A[96]</code>。然後 i 變成 97，for更新後 i 變 98。此時 <code>i != n</code> (98 != 98) 為 false，迴圈終止，沒有越界。</li></ul></div><div class="resizer"></div></div>
+    <div id="analysis-popup-6" class="analysis-popup bg-white rounded-lg shadow-2xl border" style="width:450px;height:350px;top:300px;left:calc(50% - 225px);"><div class="analysis-header flex justify-between items-center p-3 bg-blue-100 border-b"><span class="font-bold text-blue-800">題目分析：模擬鏈結串列</span><i class="fa-solid fa-xmark close-btn text-gray-500 hover:text-red-600 cursor-pointer text-xl"></i></div><div class="analysis-body p-4 overflow-y-auto text-gray-700"><p class="font-bold mb-2">目標：移除 `current` 的下一個節點。</p><p class="mb-4">這意味著，我們要讓 `current` 節點的 `next` 指標，跳過下一個節點，直接指向「下下個」節點。</p><p class="font-semibold">語法拆解：</p><ol class="list-decimal list-inside space-y-2 mt-2"><li>`current` 是**當前節點**的索引。</li><li>`list[current].next` 是**下一個節點**的索引。</li><li>`list[ list[current].next ]` 就是**下一個節點**本身。</li><li>`list[ list[current].next ].next` 就是**下下個節點**的索引。</li></ol><p class="mt-4">因此，我們要把「下下個節點的索引」(第4步的結果) 賦值給「當前節點的 next 成員」(第2步的左側)。</p></div><div class="resizer"></div></div>
+    <div id="analysis-popup-7" class="analysis-popup bg-white rounded-lg shadow-2xl border" style="width:420px;height:350px;top:200px;left:calc(50% - 210px);"><div class="analysis-header flex justify-between items-center p-3 bg-blue-100 border-b"><span class="font-bold text-blue-800">題目分析：邏輯漏洞</span><i class="fa-solid fa-xmark close-btn text-gray-500 hover:text-red-600 cursor-pointer text-xl"></i></div><div class="analysis-body p-4 overflow-y-auto text-gray-700"><p class="font-bold mb-2">錯誤根源：<code>if...else if...</code> 結構</p><p class="mb-4">如果一個數字滿足了第一個 `if` (更新最大值M)，它就**不會**再進入 `else if` 檢查是否要更新最小值N。</p><p class="font-bold mt-4 mb-2">以選項 (B) {80, 90, 100} 為例：</p><ol class="list-decimal list-inside space-y-2"><li>i=0, A[0]=80: `80 > M(-1)` 為真，`M`=80。`else if` 不執行。</li><li>i=1, A[1]=90: `90 > M(80)` 為真，`M`=90。`else if` 不執行。</li><li>i=2, A[2]=100: `100 > M(90)` 為真，`M`=100。`else if` 不執行。</li></ol><p class="mt-4">最終輸出 M=100, N=101。<strong>錯誤！</strong> 正確的最小值 N 應是 80，但程式從未更新N。</p></div><div class="resizer"></div></div>
+    <div id="analysis-popup-8" class="analysis-popup bg-white rounded-lg shadow-2xl border" style="width:420px;height:300px;top:200px;left:calc(50% - 210px);"><div class="analysis-header flex justify-between items-center p-3 bg-blue-100 border-b"><span class="font-bold text-blue-800">題目分析：時間複雜度</span><i class="fa-solid fa-xmark close-btn text-gray-500 hover:text-red-600 cursor-pointer text-xl"></i></div><div class="analysis-body p-4 overflow-y-auto text-gray-700"><ol class="list-decimal list-inside space-y-2"><li>外層迴圈從 `i = 0` 到 `n-1`。</li><li>內層迴圈執行次數與 `i` 有關：當 i=0, 跑n次; 當 i=1, 跑n-1次; ...; 當 i=n-1, 跑1次。</li><li>總執行次數為 n + (n-1) + ... + 1，這是一個等差級數，和為 n(n+1)/2 = (n<sup>2</sup>+n)/2。</li><li>在 Big-O 中，我們只關心最高次項並忽略係數，因此時間複雜度為 <strong>O(n<sup>2</sup>)</strong>。</li></ol></div><div class="resizer"></div></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Tab Switching Logic ---
+    const tabs = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const target = tab.getAttribute('data-tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            tabContents.forEach(content => {
+                content.classList.toggle('active', content.id === target);
+            });
+        });
+    });
+
+    // --- Self-test Answer Toggle Logic ---
+    const answerToggles = document.querySelectorAll('.toggle-answers');
+    answerToggles.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetId = button.getAttribute('data-target');
+            const answerDiv = document.getElementById(targetId);
+            if (answerDiv) {
+                answerDiv.classList.toggle('hidden');
+            }
+        });
+    });
+
+    // --- Analysis Popup Logic ---
+    const popups = document.querySelectorAll('.analysis-popup');
+    document.querySelectorAll('.show-analysis-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const popup = document.querySelector(e.currentTarget.getAttribute('data-target'));
+            if (popup) {
+                popups.forEach(p => p.style.zIndex = '1000');
+                popup.style.zIndex = '1001';
+                popup.classList.add('active');
+            }
+        });
+    });
+    
+    popups.forEach(popup => {
+        const header = popup.querySelector('.analysis-header');
+        const resizer = popup.querySelector('.resizer');
+        const closeBtn = popup.querySelector('.close-btn');
+        let isDragging = false, isResizing = false;
+
+        if(closeBtn) {
+            closeBtn.addEventListener('click', () => popup.classList.remove('active'));
+        }
+        
+        if(header) {
+            header.addEventListener('mousedown', (e) => {
+                if (e.target.matches('.close-btn, .close-btn *')) return;
+                popups.forEach(p => p.style.zIndex = '1000');
+                popup.style.zIndex = '1001';
+                isDragging = true;
+                let offsetX = e.clientX - popup.offsetLeft;
+                let offsetY = e.clientY - popup.offsetTop;
+                e.preventDefault();
+                document.onmousemove = (e) => {
+                    if (!isDragging) return;
+                    popup.style.left = `${e.clientX - offsetX}px`;
+                    popup.style.top = `${e.clientY - offsetY}px`;
+                };
+                document.onmouseup = () => { isDragging = false; document.onmousemove = document.onmouseup = null; };
+            });
+        }
+
+        if(resizer) {
+            resizer.addEventListener('mousedown', (e) => {
+                isResizing = true;
+                let startX = e.clientX, startY = e.clientY;
+                let startWidth = popup.offsetWidth, startHeight = popup.offsetHeight;
+                e.preventDefault();
+                document.onmousemove = (e) => {
+                    if (!isResizing) return;
+                    const newWidth = startWidth + (e.clientX - startX);
+                    const newHeight = startHeight + (e.clientY - startY);
+                    popup.style.width = `${newWidth > 300 ? newWidth : 300}px`;
+                    popup.style.height = `${newHeight > 200 ? newHeight : 200}px`;
+                };
+                document.onmouseup = () => { isResizing = false; document.onmousemove = document.onmouseup = null; };
+            });
+        }
+    });
+});
+</script>
+
+</body>
+</html>
