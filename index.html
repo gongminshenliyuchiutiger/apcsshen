@@ -55,6 +55,35 @@
         details[open] > summary::before { transform: rotate(90deg); }
 
         pre { white-space: pre-wrap; word-wrap: break-word; }
+
+        /* NEW: Mascot styles */
+        #mascot {
+            position: fixed;
+            bottom: 15px;
+            left: 15px;
+            width: clamp(80px, 12vw, 120px);
+            z-index: 998;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+            filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.2));
+        }
+        #mascot:hover {
+            transform: scale(1.1);
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+            10%, 90% { transform: scale(1.1) translate3d(-1px, 0, 0); }
+            20%, 80% { transform: scale(1.1) translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: scale(1.1) translate3d(-3px, 0, 0); }
+            40%, 60% { transform: scale(1.1) translate3d(3px, 0, 0); }
+        }
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 1001;
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -606,8 +635,102 @@ f(10)= 384 * -10 = -3840</pre></div><div class="resizer"></div></div>
     <div id="analysis-popup-7" class="analysis-popup bg-white rounded-lg shadow-2xl border" style="width:420px;height:350px;top:200px;left:calc(50% - 210px);"><div class="analysis-header flex justify-between items-center p-3 bg-blue-100 border-b"><span class="font-bold text-blue-800">題目分析：邏輯漏洞</span><i class="fa-solid fa-xmark close-btn text-gray-500 hover:text-red-600 cursor-pointer text-xl"></i></div><div class="analysis-body p-4 overflow-y-auto text-gray-700"><p class="font-bold mb-2">錯誤根源：<code>if...else if...</code> 結構</p><p class="mb-4">如果一個數字滿足了第一個 `if` (更新最大值M)，它就**不會**再進入 `else if` 檢查是否要更新最小值N。</p><p class="font-bold mt-4 mb-2">以選項 (B) {80, 90, 100} 為例：</p><ol class="list-decimal list-inside space-y-2"><li>i=0, A[0]=80: `80 > M(-1)` 為真，`M`=80。`else if` 不執行。</li><li>i=1, A[1]=90: `90 > M(80)` 為真，`M`=90。`else if` 不執行。</li><li>i=2, A[2]=100: `100 > M(90)` 為真，`M`=100。`else if` 不執行。</li></ol><p class="mt-4">最終輸出 M=100, N=101。<strong>錯誤！</strong> 正確的最小值 N 應是 80，但程式從未更新N。</p></div><div class="resizer"></div></div>
     <div id="analysis-popup-8" class="analysis-popup bg-white rounded-lg shadow-2xl border" style="width:420px;height:300px;top:200px;left:calc(50% - 210px);"><div class="analysis-header flex justify-between items-center p-3 bg-blue-100 border-b"><span class="font-bold text-blue-800">題目分析：時間複雜度</span><i class="fa-solid fa-xmark close-btn text-gray-500 hover:text-red-600 cursor-pointer text-xl"></i></div><div class="analysis-body p-4 overflow-y-auto text-gray-700"><ol class="list-decimal list-inside space-y-2"><li>外層迴圈從 `i = 0` 到 `n-1`。</li><li>內層迴圈執行次數與 `i` 有關：當 i=0, 跑n次; 當 i=1, 跑n-1次; ...; 當 i=n-1, 跑1次。</li><li>總執行次數為 n + (n-1) + ... + 1，這是一個等差級數，和為 n(n+1)/2 = (n<sup>2</sup>+n)/2。</li><li>在 Big-O 中，我們只關心最高次項並忽略係數，因此時間複雜度為 <strong>O(n<sup>2</sup>)</strong>。</li></ol></div><div class="resizer"></div></div>
 
+    <!-- NEW: Mascot element -->
+    <img id="mascot" src="image/LiyuChillGuy.svg" alt="吉祥物 LiyuChillGuy">
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+
+    // --- NEW: Mascot and Effects Logic ---
+
+    const mascotElement = document.getElementById('mascot');
+
+    // Self-contained audio manager to generate sound without needing files
+    const audioManager = { 
+        ctx: null,
+        init: function() {
+            try {
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            } catch (e) { console.error("Web Audio API is not supported."); this.ctx = null; }
+        },
+        _playSoundNode: function(type, frequency, duration, volume = 0.1, onended = null, rampTargetFreq = null, rampTime = 0) {
+            if (!this.ctx) return;
+            const oscillator = this.ctx.createOscillator();
+            const gainNode = this.ctx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(this.ctx.destination);
+            oscillator.type = type;
+            oscillator.frequency.setValueAtTime(frequency, this.ctx.currentTime);
+            if (rampTargetFreq !== null) oscillator.frequency.linearRampToValueAtTime(rampTargetFreq, this.ctx.currentTime + (rampTime > 0 ? rampTime : duration * 0.8));
+            gainNode.gain.setValueAtTime(volume, this.ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, this.ctx.currentTime + duration);
+            oscillator.start(this.ctx.currentTime);
+            oscillator.stop(this.ctx.currentTime + duration);
+            if (onended) oscillator.onended = onended;
+        },
+        play: async function(soundName) {
+            if (!this.ctx) { console.warn("AudioContext not available for:", soundName); return; }
+            if (this.ctx.state === 'suspended') {
+                try { await this.ctx.resume(); } catch (e) { console.error("Failed to resume AudioContext:", e); return; }
+            }
+            if (soundName === 'sparkle') {
+                this._playSoundNode('triangle', 1500, 0.1, 0.07, null, 2500, 0.08);
+                setTimeout(() => this._playSoundNode('sine', 2000, 0.1, 0.05), 80);
+            }
+        }
+    };
+    audioManager.init();
+
+    // Enhanced particle effect function
+    function createParticles(x, y) {
+        const particleCount = 50; // More particles
+        const colors = ['#FFC107', '#F44336', '#4CAF50', '#2196F3', '#9C27B0', '#00BCD4', '#FFEB3B'];
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            document.body.appendChild(particle);
+
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const size = Math.random() * 10 + 8; // Larger particles (8px to 18px)
+            
+            particle.style.backgroundColor = color;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 120 + 80; // Travel further (80 to 200px)
+            const endX = Math.cos(angle) * distance;
+            const endY = Math.sin(angle) * distance;
+            
+            particle.style.left = `${x - size / 2}px`;
+            particle.style.top = `${y - size / 2}px`;
+
+            const animation = particle.animate([
+                { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                { transform: `translate(${endX}px, ${endY}px) scale(0)`, opacity: 0 }
+            ], {
+                duration: Math.random() * 800 + 500, // Longer duration (500ms to 1300ms)
+                easing: 'cubic-bezier(0.1, 0.9, 0.2, 1)',
+                fill: 'forwards'
+            });
+
+            animation.onfinish = () => particle.remove();
+        }
+    }
+
+    if (mascotElement) {
+        mascotElement.addEventListener('click', (e) => {
+            audioManager.play('sparkle');
+            const rect = mascotElement.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            createParticles(centerX, centerY);
+        });
+    }
+
+
+    // --- Original Page Logic ---
+
     // --- Tab Switching Logic ---
     const tabs = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
